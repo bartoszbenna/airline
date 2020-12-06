@@ -1,0 +1,7 @@
+<div id="navbar">
+    <p><a routerLink='/'>Home</a></p>
+    <p *ngIf="isLoggedIn; else elseBlock">Hello! You are logged in as {{role}}. <a href='#' (click)='logout()'>Logout</a></p>
+    <ng-template #elseBlock><p>Hello! Click 
+        <a routerLink='/login'>here</a>
+         to log in.</p></ng-template>
+</div>

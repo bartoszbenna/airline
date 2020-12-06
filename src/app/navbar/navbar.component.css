@@ -1,0 +1,17 @@
+#navbar {
+    height: 50px;
+    width: 80vw;
+    background-color: #494947;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+}
+
+#navbar p {
+    padding: 1%;
+}
+
+#navbar a {
+    color: #ffffff;
+    text-decoration: none;
+}
