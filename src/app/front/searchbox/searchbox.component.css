@@ -1,0 +1,18 @@
+.searchbox {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-radio-button {
+    padding: 1%;
+}
+
+mat-form-field {
+    width: 45%;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.passengers {
+    width: 29%;
+}

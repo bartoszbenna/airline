@@ -1,0 +1,18 @@
+<mat-form-field>
+    <mat-label>Show hot offers from:</mat-label>
+    <mat-select [(ngModel)]="selectedAirport" (ngModelChange)="changeAirport()">
+        <mat-option *ngFor="let airport of airports" [value]="airport.code">{{airport.name}}</mat-option>
+    </mat-select>
+</mat-form-field>
+<div class="tilescontainer" *ngIf="offers.length != 0">
+    <div class="tile" *ngFor="let offer of offers" [style.background-image]="'url(/assets/img/airports/' + offer.arrCode + '.jpg)'">
+        <div class="tilecontent">
+            <h1>{{searchService.getNameFromCode(offer.arrCode)}}</h1>
+            {{offer.depDate.toDateString()}}<br>
+            {{offer.price}} EUR
+        </div>
+    </div>
+</div>
+<div *ngIf="offers.length == 0">
+    No offers found!
+</div>

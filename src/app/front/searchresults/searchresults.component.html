@@ -1,0 +1,69 @@
+<h1 class="topText">Search results</h1>
+<div class="outboundResults" *ngIf="showOutbound">
+    <h2>Select outbound flight:</h2>
+    <mat-radio-group [(ngModel)]="selectedOutbound">
+    <div class="resultsContainer">
+        <div class="button">
+            <button mat-icon-button (click)="decreaseOutDate()">
+                <mat-icon class="material-icons">navigate_before</mat-icon>
+            </button>
+        </div>
+        <div class="days" *ngFor="let day of outboundFlights">
+            <h2>{{moment(day.date).format('D MMMM YYYY')}}</h2>
+            <div class="flights" *ngFor="let flight of day.flights">
+                {{flight.flightNumber}}<br>
+                {{moment(flight.depDate).format('kk:mm')}}-{{moment(flight.arrDate).format('kk:mm')}}<br>
+                {{flight.price}} EUR
+                <mat-radio-button [value]="flight"></mat-radio-button>
+            </div>
+            <div class="noFlights" *ngIf="day.flights.length == 0">
+                No flights found
+            </div>
+        </div>
+        <div class="button">
+            <button mat-icon-button (click)="increaseOutDate()">
+                <mat-icon class="material-icons">navigate_next</mat-icon>
+            </button>
+        </div>
+    </div>
+    </mat-radio-group>
+    <mat-error *ngIf="showSelectError">You need to select the flight!</mat-error>
+    <div class="controlButtons">
+        <span></span>
+        <button mat-raised-button (click)="continueOutbound()">Continue</button>
+    </div>
+</div>
+<div class="inboundResults" *ngIf="showInbound">
+    <h2>Select return flight:</h2>
+    <mat-radio-group [(ngModel)]="selectedInbound">
+        <div class="resultsContainer">
+            <div class="button">
+                <button mat-icon-button (click)="decreaseInDate()">
+                    <mat-icon class="material-icons">navigate_before</mat-icon>
+                </button>
+            </div>
+            <div class="days" *ngFor="let day of inboundFlights">
+                <h2>{{moment(day.date).format('D MMMM YYYY')}}</h2>
+                <div class="flights" *ngFor="let flight of day.flights">
+                    {{flight.flightNumber}}<br>
+                    {{moment(flight.depDate).format('kk:mm')}}-{{moment(flight.arrDate).format('kk:mm')}}<br>
+                    {{flight.price}} EUR
+                    <mat-radio-button [value]="flight"></mat-radio-button>
+                </div>
+                <div class="noFlights" *ngIf="day.flights.length == 0">
+                    No flights found
+                </div>
+            </div>
+            <div class="button">
+                <button mat-icon-button (click)="increaseInDate()">
+                    <mat-icon class="material-icons">navigate_next</mat-icon>
+                </button>
+            </div>
+        </div>
+        </mat-radio-group>
+        <mat-error *ngIf="showSelectError">You need to select the flight!</mat-error>
+        <div class="controlButtons">
+            <button mat-raised-button (click)="returnInbound()">Return</button>
+            <button mat-raised-button (click)="continueInbound()">Continue</button>
+        </div>
+</div>

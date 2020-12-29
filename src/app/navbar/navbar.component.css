@@ -1,17 +1,30 @@
-#navbar {
+.navbar {
     height: 50px;
-    width: 80vw;
+    line-height: 50px;
     background-color: #494947;
     color: #ffffff;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding-left: 0.5%;
+    padding-right: 0.5%;
 }
 
-#navbar p {
-    padding: 1%;
-}
-
-#navbar a {
+.navbar a {
     color: #ffffff;
     text-decoration: none;
+}
+
+.navbar button {
+    height: 75%;
+}
+
+.right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.logged, .unlogged {
+    padding-left: 0.5%;
 }

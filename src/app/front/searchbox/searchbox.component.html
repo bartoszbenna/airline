@@ -1,0 +1,61 @@
+<div class="searchbox">
+    <h1>Find your flight!</h1>
+    <form [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+        <mat-radio-group formControlName="oneWay">
+            <mat-radio-button [value]="false">Return</mat-radio-button>
+            <mat-radio-button [value]="true">One-way</mat-radio-button>
+        </mat-radio-group>
+        <br><br>
+        <mat-form-field appearance="fill">
+            <mat-label>Departure airport</mat-label>
+            <mat-select formControlName="departure">
+                <mat-option *ngFor="let airport of departures" [value]="airport.code">{{airport.name}} ({{airport.code}})</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Arrival airport</mat-label>
+            <mat-select formControlName="arrival">
+                <mat-option *ngFor="let airport of arrivals" [value]="airport.code">{{airport.name}} ({{airport.code}})</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-error *ngIf="searchForm.hasError('depArrAirportError')">Departure and arrival airports must be different!</mat-error>
+        <br>
+        <div class="datepicker">
+            <mat-form-field appearance="fill">
+                <mat-label>Departure date</mat-label>
+                <input matInput [matDatepicker]="picker1" formControlName="outDate" [min]="minDate" [max]="maxDate">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="fill" *ngIf="!searchForm.get('oneWay').value">
+                <mat-label>Return date</mat-label>
+                <input matInput [matDatepicker]="picker2" formControlName="inDate" [min]="minDate" [max]="maxDate">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+            <mat-error *ngIf="searchForm.hasError('depDateError')">Wrong departure date!</mat-error>
+            <mat-error *ngIf="searchForm.hasError('dateRangeError') && !searchForm.get('oneWay').value">Return date cannot be earlier than departure date!</mat-error>
+            <mat-error *ngIf="searchForm.hasError('returnDateNull') && !searchForm.get('oneWay').value && hasBeenSubmitted">Return date cannot be empty!</mat-error>
+        </div>
+        <br>
+        <mat-form-field appearance="fill" class="passengers">
+            <mat-label>Adult</mat-label>
+            <mat-select formControlName="adult">
+                <mat-option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" [value]="i">{{i}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="passengers">
+            <mat-label>Child</mat-label>
+            <mat-select formControlName="child">
+                <mat-option *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" [value]="i">{{i}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="passengers">
+            <mat-label>Infant</mat-label>
+            <mat-select formControlName="infant">
+                <mat-option *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" [value]="i">{{i}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button mat-raised-button type="submit">Search</button>
+    </form>
+</div>

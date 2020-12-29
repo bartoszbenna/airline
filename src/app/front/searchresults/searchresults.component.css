@@ -1,0 +1,45 @@
+.resultsContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.flights {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2%;
+    margin: 2%;
+    border: 1px solid black;
+}
+
+.button {
+    width: 8%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.days {
+    width: 28%;
+    margin: 0.5%;
+    padding: 0.5%;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.controlButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1%;
+    margin: 1%;
+}
+
+.topText {
+    text-align: center;
+}

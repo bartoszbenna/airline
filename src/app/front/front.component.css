@@ -1,0 +1,22 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    padding: 1%;
+}
+
+.topbar {
+    display: flex;
+    flex-direction: row;
+}
+
+app-offers {
+    width: 60%;
+}
+
+app-searchbox {
+    width: 40%;
+}
+
+app-searchresults {
+    width: 60%;
+}

@@ -1,0 +1,9 @@
+.basketContent {
+    display: flex;
+    justify-content: center;
+}
+
+table {
+    margin: 1%;
+    width: 90%;
+}

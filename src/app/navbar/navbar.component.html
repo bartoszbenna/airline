@@ -1,7 +1,17 @@
-<div id="navbar">
-    <p><a routerLink='/'>Home</a></p>
-    <p *ngIf="isLoggedIn; else elseBlock">Hello! You are logged in as {{role}}. <a href='#' (click)='logout()'>Logout</a></p>
-    <ng-template #elseBlock><p>Hello! Click 
-        <a routerLink='/login'>here</a>
-         to log in.</p></ng-template>
+<div class="navbar">
+    <button mat-raised-button routerLink='/'>Home</button>
+    <div class="right">
+        <div class="basketButton">
+            <button mat-icon-button (click)="openBasket()">
+                <mat-icon class="material-icons" [matBadge]="basketService.basketContent.length">shopping_basket</mat-icon>
+            </button>
+        </div>
+        <div class="logged" *ngIf="isLoggedIn">
+            Hello, {{role}}!
+            <button mat-raised-button (click)="logout()">Logout</button>
+        </div>
+        <div class="unlogged" *ngIf="!isLoggedIn">
+            <button mat-raised-button (click)="openDialog()" >Login</button>
+        </div>
+    </div>
 </div>

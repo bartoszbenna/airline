@@ -1,0 +1,17 @@
+.tilescontainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.tile {
+    background-size: cover;
+    width: 32%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    margin: 0.5%;
+}
+
+.tilecontent {
+    padding-left: 1%;
+}

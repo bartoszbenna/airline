@@ -1,5 +1,8 @@
-<div id="container">
-    <h1>{{title}}</h1>
+<div class="container">
+    <div class="header">
+        <img [src]="logoPath" alt="logo">
+        <h1>{{title}}</h1>
+    </div>
     <app-navbar></app-navbar>
     <router-outlet></router-outlet>
 </div>
