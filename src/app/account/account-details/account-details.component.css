@@ -1,0 +1,29 @@
+.accountcontainer {
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.photo img {
+    width: 300px;
+}
+
+.details {
+    padding: 3%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 200%;
+}
+
+.details h1 {
+    font-weight: 200;
+    font-size: 350%;
+}
+
+.details span {
+    font-size: large;
+}

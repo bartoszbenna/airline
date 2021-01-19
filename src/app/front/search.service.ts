@@ -1,14 +1,14 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as moment from 'moment';
 import { Subject, BehaviorSubject } from 'rxjs';
-import { SearchresultsComponent } from './searchresults/searchresults.component';
+import * as moment from 'moment';
 
-export interface Airport {
+export interface IAirport {
   code: string,
   name: string
 }
 
-export interface SearchResult {
+export interface ISearchResult {
   flightNumber: string,
   depDate: Date,
   arrDate: Date,
@@ -17,13 +17,12 @@ export interface SearchResult {
   price: number,
 }
 
-export interface SearchResults {
-  outbound: SearchResult[],
-  inbound: SearchResult[],
-  searchForm: SearchForm
+export interface ISearchResults {
+  outbound: ISearchResult[],
+  inbound: ISearchResult[]
 }
 
-export interface SearchForm {
+export interface ISearchForm {
   oneWay: boolean,
   departure: string,
   arrival: string,
@@ -40,34 +39,26 @@ export interface SearchForm {
 export class SearchService {
 
   public isShowingResults = new Subject<boolean>();
+  public isWaitingForResults = new BehaviorSubject<boolean>(false);
   public resetResultsSubject = new Subject<boolean>();
-  public searchResults = new BehaviorSubject<SearchResults>({outbound: [], inbound: [], searchForm: null});
+  public searchForm = new BehaviorSubject<ISearchForm>(null);
+  public searchResults = new BehaviorSubject<ISearchResults>({outbound: [], inbound: []});
+  public airportsSubject = new BehaviorSubject<IAirport[]>(null);
 
-  private airports = [
-    {code: "LHR", name: "London-Heathrow"},
-    {code: "FRA", name: "Frankfurt"},
-    {code: "CDG", name: "Paris CDG"},
-    {code: "WAW", name: "Warsaw"},
-    {code: "MAD", name: "Madrid-Barajas"}
-  ]
+  private searchApi = "http://localhost:3000/search/";
 
-  private flights: SearchResult[] = [
-    {flightNumber: 'AA1234', depDate: new Date(2021, 0, 10, 13, 15, 0, 0), arrDate: new Date(2021, 0, 10, 15, 15, 0, 0), depCode: 'LHR', arrCode: 'FRA', price: 180},
-    {flightNumber: 'AA1234', depDate: new Date(2021, 0, 11, 13, 15, 0, 0), arrDate: new Date(2021, 0, 11, 15, 15, 0, 0), depCode: 'LHR', arrCode: 'FRA', price: 190},
-    {flightNumber: 'AA1234', depDate: new Date(2021, 0, 11, 18, 20, 0, 0), arrDate: new Date(2021, 0, 11, 20, 20, 0, 0), depCode: 'LHR', arrCode: 'FRA', price: 185},
-    {flightNumber: 'AA1234', depDate: new Date(2021, 0, 12, 13, 15, 0, 0), arrDate: new Date(2021, 0, 12, 15, 15, 0, 0), depCode: 'LHR', arrCode: 'FRA', price: 315},
-    {flightNumber: 'AA1234', depDate: new Date(2021, 0, 13, 18, 20, 0, 0), arrDate: new Date(2021, 0, 13, 20, 20, 0, 0), depCode: 'LHR', arrCode: 'FRA', price: 300},
-    {flightNumber: 'AA1235', depDate: new Date(2021, 0, 11, 13, 15, 0, 0), arrDate: new Date(2021, 0, 11, 15, 15, 0, 0), depCode: 'FRA', arrCode: 'LHR', price: 190},
-    {flightNumber: 'AA1235', depDate: new Date(2021, 0, 12, 18, 20, 0, 0), arrDate: new Date(2021, 0, 12, 20, 20, 0, 0), depCode: 'FRA', arrCode: 'LHR', price: 185},
-    {flightNumber: 'AA1235', depDate: new Date(2021, 0, 13, 13, 15, 0, 0), arrDate: new Date(2021, 0, 13, 15, 15, 0, 0), depCode: 'FRA', arrCode: 'LHR', price: 315},
-    {flightNumber: 'AA1235', depDate: new Date(2021, 0, 13, 18, 20, 0, 0), arrDate: new Date(2021, 0, 13, 20, 20, 0, 0), depCode: 'FRA', arrCode: 'LHR', price: 300},
-    {flightNumber: 'AA1235', depDate: new Date(2021, 0, 15, 18, 20, 0, 0), arrDate: new Date(2021, 0, 15, 20, 20, 0, 0), depCode: 'FRA', arrCode: 'LHR', price: 150}
-  ]
+  private airports: IAirport[];
 
-  constructor() { }
+  constructor(private http: HttpClient) {
+    this.getAirports();
+  }
 
   getAirports() {
-    return this.airports;
+    this.http.get<IAirport[]>(this.searchApi + 'getAirports').subscribe(message => {
+      
+      this.airportsSubject.next(message);
+      this.airports = message;
+    })
   }
 
   getNameFromCode(airportCode: string) {
@@ -78,30 +69,30 @@ export class SearchService {
     }
   }
 
-  search(form: SearchForm) {
-    const oneWay = form.oneWay;
-    const depCode = form.departure;
-    const arrCode = form.arrival;
-    const outDate = form.outDate;
-    const inDate = form.inDate;
-    const inbounds: SearchResult[] = [];
-    const outbounds: SearchResult[] = [];
+  search(form: ISearchForm) {
+    this.isWaitingForResults.next(true);
+    this.searchForm.next(form);
     this.showResults();
+    
+    const params = new HttpParams()
+      .set('oneWay', String(form.oneWay))
+      .set('departure', form.departure)
+      .set('arrival', form.arrival)
+      .set('outDate', moment(form.outDate).format('YYYY-MM-DD'))
+      .set('inDate', form.oneWay ? '' : moment(form.inDate).format('YYYY-MM-DD'))
+      .set('adult', String(form.adult))
+      .set('child', String(form.child))
+      .set('infant', String(form.infant))
 
-    for (let flight of this.flights) {
-      if (flight.depCode == depCode && flight.arrCode == arrCode && Math.abs(moment(flight.depDate).diff(outDate, 'days')) <= 1) {
-        outbounds.push(flight);
-      }
-      if (flight.depCode == arrCode && flight.arrCode == depCode && Math.abs(moment(flight.depDate).diff(inDate, 'days')) <= 1 && !oneWay) {
-        inbounds.push(flight);
-      }
-    }
-    this.searchResults.next({outbound: outbounds, inbound: inbounds, searchForm: form})
+    this.http.get<any>(this.searchApi + 'getResults', {params: params}).subscribe(message => {
+      this.searchResults.next(message);
+      this.isWaitingForResults.next(false);
+    })
   }
 
   getOffers(airportCode: string) {
     if (airportCode == "LHR") {
-      const offers: SearchResult[] = [
+      const offers: ISearchResult[] = [
         {flightNumber: 'AA1234', depDate: new Date(2021, 1, 10, 13, 15, 0), arrDate: new Date(2021, 1, 10, 13, 15, 0), depCode: "LHR", arrCode: "FRA", price: 150},
         {flightNumber: 'AA1234', depDate: new Date(2021, 1, 11, 15, 0, 0), arrDate: new Date(2021, 1, 13, 15, 0, 0), depCode: "LHR", arrCode: "CDG", price: 175},
         {flightNumber: 'AA1234', depDate: new Date(2021, 1, 12, 12, 55, 0), arrDate: new Date(2021, 1, 14, 12, 55, 0), depCode: "LHR", arrCode: "WAW", price: 190},
@@ -111,7 +102,7 @@ export class SearchService {
     }
 
     if (airportCode == "FRA") {
-      const offers: SearchResult[] = [
+      const offers: ISearchResult[] = [
         {flightNumber: 'AA1234', depDate: new Date(2021, 1, 17, 17, 15, 0), arrDate: new Date(2021, 1, 17, 19, 15, 0), depCode: "FRA", arrCode: "CDG", price: 125},
         {flightNumber: 'AA1234', depDate: new Date(2021, 1, 18, 18, 20, 0), arrDate: new Date(2021, 1, 18, 20, 20, 0), depCode: "FRA", arrCode: "LHR", price: 75},
         {flightNumber: 'AA1234', depDate: new Date(2021, 1, 19, 9, 55, 0), arrDate: new Date(2021, 1, 19, 11, 55, 0), depCode: "FRA", arrCode: "WAW", price: 190},
@@ -127,6 +118,11 @@ export class SearchService {
 
   showResults() {
     this.isShowingResults.next(true);
+  }
+
+  hideResults() {
+    this.isShowingResults.next(false);
+    this.resetResults();
   }
 
   resetResults() {

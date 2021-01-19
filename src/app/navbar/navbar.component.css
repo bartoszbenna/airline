@@ -27,4 +27,19 @@
 
 .logged, .unlogged {
     padding-left: 0.5%;
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: center;
+}
+
+.logged span {
+    display: flex;
+    flex-shrink: 0;
+
+}
+
+mat-icons {
+    height: 100%;
+    align-items: center;
 }

@@ -1,17 +1,41 @@
 <div class="navbar">
-    <button mat-raised-button routerLink='/'>Home</button>
+    <button mat-icon-button (click)="redirectToHome()">
+        <mat-icon>home</mat-icon>
+    </button>
     <div class="right">
         <div class="basketButton">
             <button mat-icon-button (click)="openBasket()">
-                <mat-icon class="material-icons" [matBadge]="basketService.basketContent.length">shopping_basket</mat-icon>
+                <mat-icon [matBadge]="basketService.basketContent.length">shopping_basket</mat-icon>
             </button>
         </div>
         <div class="logged" *ngIf="isLoggedIn">
-            Hello, {{role}}!
-            <button mat-raised-button (click)="logout()">Logout</button>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>account_circle</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" xPosition="before">
+                <button mat-menu-item (click)="router.navigate(['/account/details'])">
+                    <mat-icon>account_box</mat-icon>
+                    <span>View account details</span>
+                </button>
+                <button mat-menu-item (click)="router.navigate(['/account/reservations'])">
+                    <mat-icon>date_range</mat-icon>
+                    <span>View my reservations</span>
+                </button>
+                <button mat-menu-item>
+                    <mat-icon>settings</mat-icon>
+                    <span>Settings</span>
+                </button>
+                <button mat-menu-item (click)="logout()">
+                    <mat-icon>logout</mat-icon>
+                    <span>Sign out</span>
+                </button>
+            </mat-menu>
         </div>
         <div class="unlogged" *ngIf="!isLoggedIn">
-            <button mat-raised-button (click)="openDialog()" >Login</button>
+            <button mat-icon-button (click)="openDialog()" >
+                <mat-icon>login</mat-icon>
+            </button>
         </div>
+
     </div>
 </div>

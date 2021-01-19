@@ -5,13 +5,41 @@
 }
 
 .tile {
-    background-size: cover;
     width: 32%;
-    padding-top: 2%;
-    padding-bottom: 2%;
+    height: 150px;
     margin: 0.5%;
+    position: relative;
 }
 
-.tilecontent {
-    padding-left: 1%;
+.image {
+    width: 100%;
+    height: 100%;
+}
+
+.tileOverlay {
+    background-color: #BB7E5D;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 0;
+    transition: .5s ease;
+}
+
+.tile:hover .tileOverlay {
+    bottom: 0;
+    height: 100%;
+}
+
+.overlayText {
+    color: white;
+    position: absolute;
+    padding-left: 2.5%;
+    padding-top: 2.5%;
+}
+
+.overlayText button {
+    margin-top: 10%;
 }

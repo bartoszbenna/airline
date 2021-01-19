@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="accountMenu">
+        <button mat-button (click)="router.navigate(['/account/details'])">
+            <mat-icon>account_box</mat-icon>
+            <span>View account details</span>
+        </button>
+        <button mat-button (click)="router.navigate(['/account/reservations'])">
+            <mat-icon>date_range</mat-icon>
+            <span>View my reservations</span>
+        </button>
+        <button mat-button>
+            <mat-icon>settings</mat-icon>
+            <span>Settings</span>
+        </button>
+    </div>
+    <div class="outlet">
+        <router-outlet></router-outlet>
+    </div>
+</div>

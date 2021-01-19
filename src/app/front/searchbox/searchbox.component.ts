@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import * as moment from 'moment';
-import { Airport, SearchService } from '../search.service';
+import { IAirport, SearchService } from '../search.service';
 
 const DepArrDateValidator: ValidatorFn = (fg: FormGroup) => {
   const depDate = fg.get('outDate').value;
@@ -54,16 +54,15 @@ export class SearchboxComponent implements OnInit {
   public minDate: Date;
   public maxDate: Date;
 
-
-  public departures: Airport[] = this.searchService.getAirports();
-  public arrivals: Airport[] = this.searchService.getAirports();
+  public departures: IAirport[];
+  public arrivals: IAirport[];
 
   public searchForm = new FormGroup({
     oneWay: new FormControl(false, [Validators.required]),
     departure: new FormControl('LHR', [Validators.required]),
     arrival: new FormControl('FRA', [Validators.required]),
-    outDate: new FormControl(new Date(2021, 0, 11, 2), [Validators.required]),
-    inDate: new FormControl(new Date(2021, 0, 13, 2)),
+    outDate: new FormControl(new Date(2021, 1, 11, 2), [Validators.required]),
+    inDate: new FormControl(new Date(2021, 1, 13, 2)),
     adult: new FormControl(1, [Validators.required]),
     child: new FormControl(0, [Validators.required]),
     infant: new FormControl(0, [Validators.required])
@@ -78,6 +77,10 @@ export class SearchboxComponent implements OnInit {
     today.setHours(0, 0, 0, 0);
     this.minDate = new Date(today);
     this.maxDate = new Date(currentYear + 1, 11, 31);
+    this.searchService.airportsSubject.asObservable().subscribe(message => {
+      this.departures = message;
+      this.arrivals = message;
+    })
   }
 
   submitSearch() {

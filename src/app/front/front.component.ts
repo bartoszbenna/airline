@@ -10,7 +10,6 @@ export class FrontComponent implements OnInit {
 
   public isShowingResults: boolean = false;
 
-
   constructor(private searchService: SearchService) { }
 
   ngOnInit(): void {

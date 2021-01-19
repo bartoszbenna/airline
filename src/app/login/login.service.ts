@@ -1,77 +1,83 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+
+export interface IUserData {
+  email: string,
+  firstName: string,
+  lastName: string,
+  role: string
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
-  private loginSubject = new Subject<boolean>();
+  private loginStatusSubject = new BehaviorSubject<boolean>(null);
+  private userDataSubject = new BehaviorSubject<any>({});
+  public currentStatus: boolean = null;
 
-  private loginUrl = 'http://localhost:3000/login';
-  private validationUrl = 'http://localhost:3000/token/validate';
-  private logoutUrl = 'http://localhost:3000/token/logout';
+  private loginApi = 'http://localhost:3000/login/';
 
-  constructor(private cookieService: CookieService, private http: HttpClient) { }
+  constructor(private cookieService: CookieService, private http: HttpClient, private router: Router) { }
 
-  async login(login: string, password: string) {
+  async login(email: string, password: string) {
     let loginPromise = new Promise ((resolve, reject) => {
-      this.http.post<any>(this.loginUrl, {login: login, password: password}).subscribe((res: any) => {
-        const tokenString = res.tokenString;
-        const role = res.role;
-        const validity = res.validity;
-        if (tokenString != '') {
-          //logged in
-          this.cookieService.set('token', tokenString, {expires: new Date(validity)});
-          this.sendStatusChange(true);
-          resolve({
-            result: "correct",
-            loginToken: tokenString,
-            role: role
-          });
-        }
-        else {
-          //incorrect
-          resolve({
-            result: "incorrect"
-          })
-        }
-      } )
+      this.http.post<any>(this.loginApi + 'authorize', {email: email, password: password}, {withCredentials: true}).subscribe((res: any) => {
+        this.sendStatusChange(true);
+        resolve('success');
+      }, (error) => {
+        reject(error)
+      })
     })
     let response = await loginPromise;
     return response;
   }
 
-  async getRole() {
-    if (!this.cookieService.check('token')) {
-      return {logged: false}
-    }
-    const tokenString = this.cookieService.get('token');
-    let validatePromise = new Promise ((resolve, reject) => {
-      this.http.post(this.validationUrl, {tokenString: tokenString}).subscribe((res: any) => {
-        resolve(res.role);
-      })
+  async getUserData() {
+    let userDataPromise = new Promise((resolve, reject) => {
+      if (this.cookieService.check('token')) {
+        const tokenString = this.cookieService.get('token');
+        const headers = new HttpHeaders({'x-access-token': tokenString})
+        this.http.get(this.loginApi + 'verify', {headers: headers}).subscribe((res: any) => {
+          this.userDataSubject.next(res);
+          this.sendStatusChange(true);
+          resolve(res)
+        }, (error) => {
+          this.sendStatusChange(false)
+          this.userDataSubject.next({});
+          reject()
+        })
+      }
+      else {
+        this.sendStatusChange(false);
+      }
     })
-    let role = await validatePromise;
-    return role;
+    let userData = await userDataPromise;
+    return userData;
   }
 
   logout() {
     this.sendStatusChange(false);
     if (this.cookieService.check('token')) {
-      const token = this.cookieService.get('token');
-      this.http.post(this.logoutUrl, {tokenString: token}).subscribe();
       this.cookieService.delete('token');
     }
+    this.router.navigate(['/']);
   }
 
   sendStatusChange(newStatus: boolean) {
-    this.loginSubject.next(newStatus);
+    this.loginStatusSubject.next(newStatus);
+    this.currentStatus = newStatus;
   }
 
   getLoginStatusObservable() {
-    return this.loginSubject.asObservable();
+    return this.loginStatusSubject.asObservable();
+  }
+
+  getUserDataObservable() {
+    return this.userDataSubject.asObservable();
   }
 }

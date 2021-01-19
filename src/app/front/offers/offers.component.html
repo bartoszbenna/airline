@@ -4,15 +4,19 @@
         <mat-option *ngFor="let airport of airports" [value]="airport.code">{{airport.name}}</mat-option>
     </mat-select>
 </mat-form-field>
-<div class="tilescontainer" *ngIf="offers.length != 0">
-    <div class="tile" *ngFor="let offer of offers" [style.background-image]="'url(/assets/img/airports/' + offer.arrCode + '.jpg)'">
-        <div class="tilecontent">
-            <h1>{{searchService.getNameFromCode(offer.arrCode)}}</h1>
-            {{offer.depDate.toDateString()}}<br>
-            {{offer.price}} EUR
+<div class="tilescontainer" *ngIf="offers != undefined && offers.length != 0">
+    <div class="tile" *ngFor="let offer of offers">
+        <img src='{{ "/assets/img/airports/" + offer.arrCode + ".jpg"}}' class="image">
+        <div class="tileOverlay">
+            <div class="overlayText">
+                <h1>{{searchService.getNameFromCode(offer.arrCode)}}</h1>
+                {{offer.depDate.toDateString()}}<br>
+                {{offer.price}} EUR<br>
+                <button mat-raised-button>Check offer!</button>
+            </div>
         </div>
     </div>
 </div>
-<div *ngIf="offers.length == 0">
+<div *ngIf="offers == undefined || offers.length == 0">
     No offers found!
 </div>

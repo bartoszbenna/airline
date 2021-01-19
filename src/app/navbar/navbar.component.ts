@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginService } from '../login/login.service';
+import { IUserData, LoginService } from '../login/login.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { LoginComponent } from '../login//login.component';
 import { BasketService } from '../basket/basket.service';
 import { Router } from '@angular/router';
+import { SearchService } from '../front/search.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,34 +13,49 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   public isLoggedIn: boolean = false;
+  public firstName: string;
+  public lastName: string;
   public role: string;
 
   constructor(private loginService: LoginService, 
               private dialog: MatDialog,
               public basketService: BasketService,
-              private router: Router) {}
+              private searchService: SearchService,
+              public router: Router) {}
 
   ngOnInit(): void {
-    this.initNavbar();
     this.loginService.getLoginStatusObservable().subscribe(message => {
-      this.isLoggedIn = message;
-      if (this.isLoggedIn) {
+      if (message == null) {
         this.initNavbar();
+      }
+      if (message != this.isLoggedIn) {
+        this.isLoggedIn = message;
+        if (this.isLoggedIn) {
+          this.initNavbar();
+        }
       }
     })
   }
 
-  private initNavbar() {
-    this.loginService.getRole().then((res: string) => {
-      if (res == 'admin' || res == 'client') {
-        this.isLoggedIn = true;
-        this.role = res;
-      }
-      else {
-        this.isLoggedIn = false;
-        this.role = '';
-      }
-    })
+  private async initNavbar() {
+    try {
+      const userData: any = await this.loginService.getUserData()
+      this.firstName = userData.firstName;
+      this.lastName = userData.lastName;
+      this.role = userData.role;
+      this.isLoggedIn = true;
+    }
+    catch (error) {
+      this.isLoggedIn = false;
+      this.firstName = undefined
+      this.lastName = undefined
+      this.role = undefined
+    }
+  }
+
+  redirectToHome() {
+    this.searchService.hideResults();
+    this.router.navigate(['']);
   }
 
   openDialog() {
@@ -58,7 +74,7 @@ export class NavbarComponent implements OnInit {
   }
 
   openBasket() {
-    this.router.navigate(['basket'])
+    this.router.navigate(['basket']);
   }
 
 }

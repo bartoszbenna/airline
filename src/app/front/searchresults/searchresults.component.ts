@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { BasketService } from 'src/app/basket/basket.service';
-import { SearchResult, SearchResults, SearchService } from '../search.service';
+import { ISearchForm, ISearchResult, ISearchResults, SearchService } from '../search.service';
 
 @Component({
   selector: 'app-searchresults',
@@ -13,22 +13,32 @@ export class SearchresultsComponent implements OnInit {
 
   public moment: any = moment;
 
-  public searchResults: SearchResults;
+  public searchResults: ISearchResults;
+  public searchForm: ISearchForm;
   public outboundFlights = [];
   public inboundFlights = [];
 
   public showOutbound: boolean = true;
   public showInbound: boolean = false;
+  public isWaitingForResults: boolean = false;
   public showSelectError: boolean = false;
 
-  public selectedOutbound: SearchResult = null;
-  public selectedInbound: SearchResult = null;
+  public selectedOutbound: ISearchResult = null;
+  public selectedInbound: ISearchResult = null;
 
-  constructor(private searchService: SearchService, private basketService: BasketService, private router: Router) { }
+  constructor(public searchService: SearchService, private basketService: BasketService, private router: Router) { }
 
   ngOnInit(): void {
+    this.searchService.searchForm.asObservable().subscribe(message => {
+      this.searchForm = message;
+    })
+    
     this.searchService.resetResultsSubject.asObservable().subscribe(message => {
       this.resetResults();
+    })
+
+    this.searchService.isWaitingForResults.asObservable().subscribe(message => {
+      this.isWaitingForResults = message;
     })
     
     this.searchService.searchResults.asObservable().subscribe(message => {
@@ -36,13 +46,13 @@ export class SearchresultsComponent implements OnInit {
 
       this.outboundFlights = [];
 
-      let earliestOutbound = new Date(this.searchResults.searchForm.outDate);
+      let earliestOutbound = new Date(this.searchForm.outDate);
       earliestOutbound.setDate(earliestOutbound.getDate() - 1);
-      let latestOutbound = new Date(this.searchResults.searchForm.outDate);
+      let latestOutbound = new Date(this.searchForm.outDate);
       latestOutbound.setDate(latestOutbound.getDate() + 1);
 
       this.outboundFlights.push({date: new Date(earliestOutbound), flights: []});
-      this.outboundFlights.push({date: new Date(this.searchResults.searchForm.outDate), flights: []});
+      this.outboundFlights.push({date: new Date(this.searchForm.outDate), flights: []});
       this.outboundFlights.push({date: new Date(latestOutbound), flights: []});
 
       for (let flight of this.searchResults.outbound) {
@@ -67,16 +77,16 @@ export class SearchresultsComponent implements OnInit {
   }
 
   verifyInboundFlights() {
-    if (!this.searchResults.searchForm.oneWay) {
-      let earliestInbound = new Date(this.searchResults.searchForm.inDate);
+    if (!this.searchForm.oneWay) {
+      let earliestInbound = new Date(this.searchForm.inDate);
       earliestInbound.setDate(earliestInbound.getDate() - 1);
-      let latestInbound = new Date(this.searchResults.searchForm.inDate);
+      let latestInbound = new Date(this.searchForm.inDate);
       latestInbound.setDate(latestInbound.getDate() + 1);
 
       this.inboundFlights = [];
 
       this.inboundFlights.push({date: new Date(earliestInbound), flights: []});
-      this.inboundFlights.push({date: new Date(this.searchResults.searchForm.inDate), flights: []});
+      this.inboundFlights.push({date: new Date(this.searchForm.inDate), flights: []});
       this.inboundFlights.push({date: new Date(latestInbound), flights: []});
 
       for (let flight of this.searchResults.inbound) {
@@ -98,27 +108,31 @@ export class SearchresultsComponent implements OnInit {
   }
 
   decreaseOutDate() {
-    let newForm = this.searchResults.searchForm;
-    newForm.outDate.setDate(newForm.outDate.getDate() - 1)
-    if (!moment(newForm.outDate).isBefore(new Date(), 'days')) {
-      this.searchService.search(newForm);
+    let outDate = new Date(this.searchForm.outDate);
+    outDate.setDate(new Date(outDate).getDate() - 1)
+    if (!moment(outDate).isBefore(new Date(), 'days')) {
+      this.searchForm.outDate = new Date(outDate);
+      this.searchService.search(this.searchForm);
     }
   }
 
   increaseOutDate() {
-    let newForm = this.searchResults.searchForm;
-    newForm.outDate.setDate(newForm.outDate.getDate() + 1)
-    if (moment(newForm.outDate).isAfter(newForm.inDate)) {
-      newForm.inDate.setDate(newForm.inDate.getDate() + Math.abs(moment(this.searchResults.searchForm.outDate).diff(this.searchResults.searchForm.inDate, 'days')))
+    let outDate = new Date(this.searchForm.outDate);
+    let inDate = new Date(this.searchForm.inDate);
+    outDate.setDate(new Date(outDate).getDate() + 1)
+    if (moment(outDate).isAfter(inDate)) {
+      inDate.setDate(new Date(inDate).getDate() + Math.abs(moment(outDate).diff(inDate, 'days')))
     }
-    this.searchService.search(newForm)
+    this.searchForm.outDate = new Date(outDate);
+    this.searchForm.inDate = new Date(inDate);
+    this.searchService.search(this.searchForm)
   }
 
   continueOutbound() {
     if (this.selectedOutbound == null) {
       this.showSelectError = true;
     }
-    else if (this.searchResults.searchForm.oneWay) {
+    else if (this.searchForm.oneWay) {
       this.continueToBasket();
     }
     else {
@@ -132,18 +146,16 @@ export class SearchresultsComponent implements OnInit {
   }
 
   decreaseInDate() {
-    const inDate = this.searchResults.searchForm.inDate;
+    const inDate = new Date(this.searchForm.inDate);
     if (moment(new Date(inDate).setDate(inDate.getDate()) - 1).isAfter(this.selectedOutbound.arrDate)) {
-      let newForm = this.searchResults.searchForm;
-      newForm.inDate.setDate(newForm.inDate.getDate() - 1);
-      this.searchService.search(newForm);
+      this.searchForm.inDate.setDate(inDate.getDate() - 1);
+      this.searchService.search(this.searchForm);
     }
   }
 
   increaseInDate() {
-    let newForm = this.searchResults.searchForm;
-    newForm.inDate.setDate(newForm.inDate.getDate() + 1);
-    this.searchService.search(newForm);
+    this.searchForm.inDate.setDate(new Date(this.searchForm.inDate).getDate() + 1);
+    this.searchService.search(this.searchForm);
   }
 
   returnInbound() {
@@ -152,7 +164,7 @@ export class SearchresultsComponent implements OnInit {
   }
 
   continueInbound() {
-    if (this.selectedInbound == null && !this.searchResults.searchForm.oneWay) {
+    if (this.selectedInbound == null && !this.searchForm.oneWay) {
       this.showSelectError = true;
     }
     else {
@@ -161,7 +173,7 @@ export class SearchresultsComponent implements OnInit {
     }
   }
 
-  completePassengerNumber(flight: SearchResult, adult: number, child: number, infant: number) {
+  completePassengerNumber(flight: ISearchResult, adult: number, child: number, infant: number) {
     return {
       flightNumber: flight.flightNumber,
       depDate: flight.depDate,
@@ -176,7 +188,7 @@ export class SearchresultsComponent implements OnInit {
   }
 
   continueToBasket() {
-    const searchForm = this.searchResults.searchForm;
+    const searchForm = this.searchForm;
     const basketContent = [this.completePassengerNumber(this.selectedOutbound, searchForm.adult, searchForm.child, searchForm.infant)];
     if (this.selectedInbound != null) {
       basketContent.push(this.completePassengerNumber(this.selectedInbound, searchForm.adult, searchForm.child, searchForm.infant))

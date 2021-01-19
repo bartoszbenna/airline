@@ -16,10 +16,12 @@ interface IToken {
 })
 export class LoginComponent implements OnInit {
 
-  isLoginValid: boolean = true;
+  areCredentialsValid: boolean = true;
+  hasErrorOccurred: boolean = false;
+  isWaitingForResult: boolean = false;
 
   loginForm = new FormGroup({
-    login: new FormControl('', [
+    email: new FormControl('', [
       Validators.required,
     ]),
     password: new FormControl('', [
@@ -32,17 +34,43 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  submitForm() {
-  const login = this.loginForm.value.login;
-  const pass = this.loginForm.value.password;
-    this.loginService.login(login, pass).then((res: IToken) => {
-      if (res.result == 'correct') {
-        this.isLoginValid = true;
+  enableForm() {
+    this.isWaitingForResult = false;
+    this.loginForm.get('email').enable();
+    this.loginForm.get('password').enable();
+  }
+
+  disableForm() {
+    this.isWaitingForResult = true;
+    this.loginForm.get('email').disable();
+    this.loginForm.get('password').disable();
+  }
+
+  async submitForm() {
+    const email = this.loginForm.value.email;
+    const pass = this.loginForm.value.password;
+    if (email != '' && pass != '') {
+      
+      this.disableForm();
+      try {
+        await this.loginService.login(email, pass);
+        this.enableForm();
+        this.areCredentialsValid = true;
+        this.hasErrorOccurred = false;
         this.dialogRef.close();
       }
-      else {
-        this.isLoginValid = false;
+      catch (error) {
+        if (error.status == 401) {
+          this.enableForm()
+          this.areCredentialsValid = false;
+          this.hasErrorOccurred = false;
+        }
+        else {
+          this.enableForm();
+          this.areCredentialsValid = true;
+          this.hasErrorOccurred = true;
+        }
       }
-    });
+    }
   }
 }
