@@ -1,0 +1,98 @@
+.extras {
+    max-width: 98%;
+    padding: 1%;
+}
+
+.bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.seats {
+    /* min-width: 50%; */
+    display: flex;
+}
+
+.baggage {
+    margin-top: 2%;
+    min-width: 50%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.checked, .hand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.baggage tr {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.baggage td {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.seat, .selectedSeat, .occupiedSeat {
+    margin: 1%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.seat {
+    background-color: grey;
+}
+
+.selectedSeat {
+    background-color: orange;
+}
+
+.occupiedSeat {
+    background-color: red;
+}
+
+.passengers {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+mat-card {
+    width: auto;
+    margin: 1% 1% 0 0;
+}
+
+hr {
+    width: 100%;
+}
+
+.topbar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}

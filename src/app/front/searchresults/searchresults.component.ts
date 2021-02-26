@@ -175,6 +175,7 @@ export class SearchresultsComponent implements OnInit {
 
   completePassengerNumber(flight: ISearchResult, adult: number, child: number, infant: number) {
     return {
+      _id: flight._id,
       flightNumber: flight.flightNumber,
       depDate: flight.depDate,
       arrDate: flight.arrDate,

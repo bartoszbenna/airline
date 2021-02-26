@@ -1,0 +1,110 @@
+<div class="extras">
+    <div class="spinner" *ngIf="showSpinner">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div class="topbar">
+        <h2>Total cost: {{countPrices()}} EUR</h2>
+        <button mat-raised-button (click)="next()">Submit and continue to payment</button>
+    </div>
+    <div class="errors" *ngIf="showErrors">
+        <mat-error *ngFor="let error of errorMessages">{{error}}</mat-error>
+    </div>
+    <h1>Passengers</h1>
+    <div class="passengers">
+        <mat-card *ngFor="let passenger of passengerData">
+            <mat-card-header>
+                <mat-card-title>{{passenger.firstName + " " + passenger.lastName}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                {{getSeatString(passengerData.indexOf(passenger))}}<br>
+                Checked baggage: {{checkedBaggage[passengerData.indexOf(passenger)]}}<br>
+                Carry on baggage: {{handBaggage[passengerData.indexOf(passenger)]}}<br>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <hr>
+    <div class="bottom">
+        <div class="seats">
+            <mat-tab-group dynamicHeight>
+                <mat-tab label="Outbound">
+                    <mat-radio-group [(ngModel)]="outboundSeatsSelect" (ngModelChange)="outboundSelectChange()">
+                        <mat-radio-button [value]="true">Manually select seats</mat-radio-button><br>
+                        <mat-radio-button [value]="false">Choose seats randomly</mat-radio-button>
+                    </mat-radio-group>
+                    <div *ngIf="outboundSeatsSelect" [@SeatsInOutAnimation]>
+                        Plane type: {{basket.flights[0].planeType}}
+                        <div class="row" *ngFor="let row of outboundSeatMap">
+                            <div *ngFor="let seat of row">
+                                <div class="seat" *ngIf="!outboundSelectedSeats.includes(seat) && !outboundOccupiedSeats.includes(seat)" (click)="selectSeat(seat, 'out')">{{seat}}</div>
+                                <div class="selectedSeat" *ngIf="outboundSelectedSeats.includes(seat) && !outboundOccupiedSeats.includes(seat)" (click)="deselectSeat(seat, 'out')">
+                                    {{getInitials(outboundSelectedSeats.indexOf(seat))}}
+                                </div>
+                                <div class="occupiedSeat" *ngIf="outboundOccupiedSeats.includes(seat)">{{seat}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+                <mat-tab label="Inbound" *ngIf="!oneWay">
+                    <mat-radio-group [(ngModel)]="inboundSeatsSelect" (ngModelChange)="inboundSelectChange()">
+                        <mat-radio-button [value]="true">Manually select seats</mat-radio-button><br>
+                        <mat-radio-button [value]="false">Choose seats randomly</mat-radio-button>
+                    </mat-radio-group>
+                    <div *ngIf="inboundSeatsSelect" [@SeatsInOutAnimation]>
+                        Plane type: {{basket.flights[1].planeType}}
+                        <div class="row" *ngFor="let row of inboundSeatMap">
+                            <div *ngFor="let seat of row">
+                                <div class="seat" *ngIf="!inboundSelectedSeats.includes(seat) && !inboundOccupiedSeats.includes(seat)" (click)="selectSeat(seat, 'in')">{{seat}}</div>
+                                <div class="selectedSeat" *ngIf="inboundSelectedSeats.includes(seat) && !inboundOccupiedSeats.includes(seat)" (click)="deselectSeat(seat, 'in')">
+                                    {{getInitials(inboundSelectedSeats.indexOf(seat))}}
+                                </div>
+                                <div class="occupiedSeat" *ngIf="inboundOccupiedSeats.includes(seat)">{{seat}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+        <div class="baggage">
+            <div class="hand">
+                <h1>Hand baggage</h1>
+                <h4>Here some details about it</h4>
+                <table>
+                    <tr *ngFor="let passenger of passengerData">
+                        <td>
+                            <span>{{passenger.firstName + " " + passenger.lastName}}</span>
+                        </td>
+                        <td>
+                            <button mat-icon-button (click)="addBaggage(passengerData.indexOf(passenger), 'hand')">
+                                <mat-icon>add_circle_outline</mat-icon>
+                            </button>
+                            <span>{{handBaggage[passengerData.indexOf(passenger)]}}</span>
+                            <button mat-icon-button (click)="removeBaggage(passengerData.indexOf(passenger), 'hand')">
+                                <mat-icon>remove_circle_outline</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="checked">
+                <h1>Checked in baggage</h1>
+                <h4>Here some details about it</h4>
+                <table>
+                    <tr *ngFor="let passenger of passengerData">
+                        <td>
+                            <span>{{passenger.firstName + " " + passenger.lastName}}</span>
+                        </td>
+                        <td>
+                            <button mat-icon-button (click)="addBaggage(passengerData.indexOf(passenger), 'checked')">
+                                <mat-icon>add_circle_outline</mat-icon>
+                            </button>
+                            <span>{{checkedBaggage[passengerData.indexOf(passenger)]}}</span>
+                            <button mat-icon-button (click)="removeBaggage(passengerData.indexOf(passenger), 'checked')">
+                                <mat-icon>remove_circle_outline</mat-icon>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

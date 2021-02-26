@@ -1,0 +1,56 @@
+<div class="container">
+    <div class="top">
+        <mat-error *ngFor="let error of reservation.errors">
+            {{getErrorMessage(error)}}
+        </mat-error>
+    </div>
+    <div class="bottom">
+        <div class="summary">
+            <mat-card>
+                <mat-card-header>
+                    <div mat-card-avatar><mat-icon>flight_takeoff</mat-icon></div>
+                    <mat-card-title>Reservation summary</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <h2>Your flights</h2>
+                    <div class="flight" *ngFor="let flight of reservation.reservation.flights">
+                        <h3>
+                            {{flight.flightNumber}} {{flight.depCode}}-{{flight.arrCode}}
+                        </h3>
+                        <p>
+                            <i>{{moment(flight.depDate).format("D MMM YYYY HH:mm")}}</i>
+                        </p>
+                    </div>
+                    <h2>Passengers</h2>
+                    <div class="passengers" *ngFor="let passenger of reservation.reservation.flights[0].passengers">
+                        <p>
+                            <mat-icon>person_outline</mat-icon>
+                            {{passenger.firstName}} {{passenger.lastName}}
+                        </p>
+                        <p>
+                            Number of hand baggage: {{passenger.handBaggage}}<br>
+                            Number of checked-in baggage: {{passenger.checkedBaggage}}
+                        </p>
+                    </div>
+                    <h3><strong>Total: {{reservation.reservation.totalPrice}} EUR</strong></h3>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="payment" *ngIf="!isPaymentSuccessful">
+            <div class="spinner" *ngIf="showPaymentSpinner">
+                <mat-spinner></mat-spinner>
+            </div>
+            <h1>Here a payment service can be implemented.</h1>
+            <mat-error *ngIf="showPaymentError">An error occurred. Please try again later.</mat-error>
+            <button mat-raised-button (click)="confirmReservation()">Confirm reservation</button>
+        </div>
+        <div class="paymentSuccess" *ngIf="isPaymentSuccessful">
+            <h1><mat-icon>check</mat-icon>The payment has been successful.</h1>
+            <div class="buttons">
+                <button mat-raised-button (click)="redirect('home')">Home</button>
+                <button mat-raised-button (click)="redirect('reservations')">View my reservations</button>
+            </div>
+        </div>
+    </div>
+
+</div>

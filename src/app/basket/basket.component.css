@@ -1,6 +1,18 @@
 .basketContent {
+    position: relative;
     display: flex;
     justify-content: center;
+}
+
+.spinner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    opacity: .5;
 }
 
 table {

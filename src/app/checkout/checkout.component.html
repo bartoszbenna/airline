@@ -1,0 +1,17 @@
+<div class='checkout'>
+    <mat-horizontal-stepper [linear]="true" [disableRipple]="true" #stepper>
+        <mat-step label="Enter passenger details" [editable]="false" [completed]="false">
+            <p>Time remaining: {{countdown}}</p>
+            <app-details *ngIf="showDetails"></app-details>
+        </mat-step>
+        <mat-step label="Select extras" [editable]="false" [completed]="false">
+            <p>Time remaining: {{countdown}}</p>
+            <app-checkoutextras *ngIf="showExtras"></app-checkoutextras>
+        </mat-step>
+        <mat-step label="Payment" [editable]="false" [completed]="false">
+            <p>Time remaining: {{countdown}}</p>
+            <app-payment *ngIf="showPayment"></app-payment>
+        </mat-step>
+    </mat-horizontal-stepper>
+</div>
+

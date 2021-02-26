@@ -42,18 +42,21 @@ export class LoginService {
       if (this.cookieService.check('token')) {
         const tokenString = this.cookieService.get('token');
         const headers = new HttpHeaders({'x-access-token': tokenString})
-        this.http.get(this.loginApi + 'verify', {headers: headers}).subscribe((res: any) => {
+        this.http.get(this.loginApi + 'verify', {headers: headers, withCredentials: true}).subscribe((res: any) => {
           this.userDataSubject.next(res);
           this.sendStatusChange(true);
           resolve(res)
         }, (error) => {
           this.sendStatusChange(false)
           this.userDataSubject.next({});
-          reject()
+          reject();
+          return;
         })
       }
       else {
         this.sendStatusChange(false);
+        reject();
+        return;
       }
     })
     let userData = await userDataPromise;

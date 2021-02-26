@@ -14,6 +14,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
     imports: [
@@ -31,7 +34,10 @@ import { MatDialogModule } from '@angular/material/dialog';
       MatProgressSpinnerModule,
       MatMenuModule,
       MatIconModule,
-      MatDialogModule
+      MatDialogModule,
+      MatCardModule,
+      MatTabsModule,
+      MatStepperModule
     ],
     exports: [
       MatFormFieldModule,
@@ -48,7 +54,10 @@ import { MatDialogModule } from '@angular/material/dialog';
       MatProgressSpinnerModule,
       MatMenuModule,
       MatIconModule,
-      MatDialogModule
+      MatDialogModule,
+      MatCardModule,
+      MatTabsModule,
+      MatStepperModule
     ],
     providers: [
       {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true, strict: true}},

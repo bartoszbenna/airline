@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IUserData, LoginService } from '../login/login.service';
+import { LoginService } from '../login/login.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { LoginComponent } from '../login//login.component';
 import { BasketService } from '../basket/basket.service';

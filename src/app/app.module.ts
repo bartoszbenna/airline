@@ -12,6 +12,7 @@ import { NavbarModule } from './navbar/navbar.module';
 import { FrontModule } from './front/front.module';
 import { AccountModule } from './account/account.module';
 import { BasketModule } from './basket/basket.module';
+import { CheckoutModule } from './checkout/checkout.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { BasketModule } from './basket/basket.module';
     FrontModule,
     LoginModule,
     AccountModule,
-    BasketModule
+    BasketModule,
+    CheckoutModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

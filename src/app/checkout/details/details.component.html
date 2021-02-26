@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="cards">
+        <div class="personCard" *ngFor="let formGroup of formGroups">
+            <mat-card class="card">
+                <mat-card-header>
+                    <mat-card-title>{{formGroup.get('type').value == 'adult' ? "Adult" : (formGroup.get('type').value == 'child' ? "Child" : "Infant")}}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="formGroup">
+                        <mat-form-field appearance="fill">
+                            <mat-label>First name</mat-label>
+                            <input matInput formControlName="firstName">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Last name</mat-label>
+                            <input matInput formControlName="lastName">
+                        </mat-form-field>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Date of birth</mat-label>
+                            <input matInput
+                            [matDatepicker]="picker"
+                            formControlName="dob"
+                            [min]="formGroup.get('type').value == 'adult' ? minAdultDob : (formGroup.get('type').value == 'child' ? maxAdultDob : maxChildDob)"
+                            [max]="formGroup.get('type').value == 'adult' ? maxAdultDob : (formGroup.get('type').value == 'child' ? maxChildDob : today)">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    <mat-error *ngIf="showError">There has been a problem. Check the data you have entered.</mat-error>
+    <button mat-raised-button (click)="continue()">Continue</button>
+</div>
+

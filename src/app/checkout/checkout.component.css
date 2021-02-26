@@ -1,0 +1,17 @@
+.navigation {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.details, .extras, .payment {
+    min-width: 27%;
+    padding: 2.5%;
+    margin: 0.5%;
+    background-color: lightgrey;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: baseline;
+}

@@ -61,8 +61,8 @@ export class SearchboxComponent implements OnInit {
     oneWay: new FormControl(false, [Validators.required]),
     departure: new FormControl('LHR', [Validators.required]),
     arrival: new FormControl('FRA', [Validators.required]),
-    outDate: new FormControl(new Date(2021, 1, 11, 2), [Validators.required]),
-    inDate: new FormControl(new Date(2021, 1, 13, 2)),
+    outDate: new FormControl(new Date(2021, 2, 11, 2), [Validators.required]),
+    inDate: new FormControl(new Date(2021, 2, 13, 2)),
     adult: new FormControl(1, [Validators.required]),
     child: new FormControl(0, [Validators.required]),
     infant: new FormControl(0, [Validators.required])

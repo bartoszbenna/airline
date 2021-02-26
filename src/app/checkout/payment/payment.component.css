@@ -1,0 +1,47 @@
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.summary {
+    min-width: 50%;
+}
+
+.payment, .paymentSuccess {
+    position: relative;
+    min-width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+p {
+    display: flex;
+    align-items: center;
+}
+
+.spinner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    opacity: .5;
+}
