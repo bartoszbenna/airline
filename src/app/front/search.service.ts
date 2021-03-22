@@ -47,10 +47,11 @@ export class SearchService {
     inbound: [],
   });
   public airportsSubject = new BehaviorSubject<IAirport[]>(null);
+  public searchInsertionSubject = new Subject<ISearchForm>();
 
   private searchApi = 'http://localhost:3000/search/';
 
-  private airports: IAirport[];
+  private airports: IAirport[] = [];
 
   constructor(private http: HttpClient) {
     this.getAirports();
@@ -71,6 +72,7 @@ export class SearchService {
         return airport.name;
       }
     }
+    return "";
   }
 
   search(form: ISearchForm) {
@@ -99,92 +101,16 @@ export class SearchService {
       });
   }
 
-  getOffers(airportCode: string) {
-    if (airportCode == 'LHR') {
-      const offers: ISearchResult[] = [
-        {
-          _id: '',
-          flightNumber: 'AA1234',
-          depDate: new Date(2021, 1, 10, 13, 15, 0),
-          arrDate: new Date(2021, 1, 10, 13, 15, 0),
-          depCode: 'LHR',
-          arrCode: 'FRA',
-          price: 150,
-        },
-        {
-          _id: '',
-          flightNumber: 'AA1234',
-          depDate: new Date(2021, 1, 11, 15, 0, 0),
-          arrDate: new Date(2021, 1, 13, 15, 0, 0),
-          depCode: 'LHR',
-          arrCode: 'CDG',
-          price: 175,
-        },
-        {
-          _id: '',
-          flightNumber: 'AA1234',
-          depDate: new Date(2021, 1, 12, 12, 55, 0),
-          arrDate: new Date(2021, 1, 14, 12, 55, 0),
-          depCode: 'LHR',
-          arrCode: 'WAW',
-          price: 190,
-        },
-        {
-          _id: '',
-          flightNumber: 'AA1234',
-          depDate: new Date(2021, 1, 13, 9, 15, 0),
-          arrDate: new Date(2021, 1, 15, 9, 15, 0),
-          depCode: 'LHR',
-          arrCode: 'MAD',
-          price: 80,
-        },
-      ];
-      return offers;
-    }
-
-    if (airportCode == 'FRA') {
-      const offers: ISearchResult[] = [
-        {
-          _id: '',
-          flightNumber: 'AA1234',
-          depDate: new Date(2021, 1, 17, 17, 15, 0),
-          arrDate: new Date(2021, 1, 17, 19, 15, 0),
-          depCode: 'FRA',
-          arrCode: 'CDG',
-          price: 125,
-        },
-        {
-          _id: '',
-          flightNumber: 'AA1234',
-          depDate: new Date(2021, 1, 18, 18, 20, 0),
-          arrDate: new Date(2021, 1, 18, 20, 20, 0),
-          depCode: 'FRA',
-          arrCode: 'LHR',
-          price: 75,
-        },
-        {
-          _id: '',
-          flightNumber: 'AA1234',
-          depDate: new Date(2021, 1, 19, 9, 55, 0),
-          arrDate: new Date(2021, 1, 19, 11, 55, 0),
-          depCode: 'FRA',
-          arrCode: 'WAW',
-          price: 190,
-        },
-        {
-          _id: '',
-          flightNumber: 'AA1234',
-          depDate: new Date(2021, 1, 20, 5, 35, 0),
-          arrDate: new Date(2021, 1, 20, 7, 35, 0),
-          depCode: 'FRA',
-          arrCode: 'MAD',
-          price: 160,
-        },
-      ];
-      return offers;
-    } else {
-      return [];
-    }
+  async getOffers(airportCode: string) {
+    const offerPromise = new Promise<ISearchResult[]>(async (resolve, reject) => {
+      this.http.get<ISearchResult[]>(this.searchApi + 'getOffers', {params: {airport: airportCode}}).subscribe(message => {
+        resolve(message);
+      }, error => {
+        resolve([]);
+      })
+    })
+    const result = await offerPromise;
+    return result;
   }
 
   showResults() {
@@ -198,5 +124,9 @@ export class SearchService {
 
   resetResults() {
     this.resetResultsSubject.next(true);
+  }
+
+  insertSearch(form: ISearchForm) {
+    this.searchInsertionSubject.next(form);
   }
 }

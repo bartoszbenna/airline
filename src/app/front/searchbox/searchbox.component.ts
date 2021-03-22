@@ -1,7 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import * as moment from 'moment';
+import { threadId } from 'worker_threads';
 import { IAirport, SearchService } from '../search.service';
+
+export interface ISearchForm {
+  oneWay: boolean,
+  departure: string,
+  arrival: string,
+  outDate: Date,
+  inDate: Date,
+  adult: number,
+  child: number,
+  infant: number
+}
 
 const DepArrDateValidator: ValidatorFn = (fg: FormGroup) => {
   const depDate = fg.get('outDate').value;
@@ -61,8 +73,8 @@ export class SearchboxComponent implements OnInit {
     oneWay: new FormControl(false, [Validators.required]),
     departure: new FormControl('LHR', [Validators.required]),
     arrival: new FormControl('FRA', [Validators.required]),
-    outDate: new FormControl(new Date(2021, 2, 11, 2), [Validators.required]),
-    inDate: new FormControl(new Date(2021, 2, 13, 2)),
+    outDate: new FormControl(new Date(2021, 4, 11, 2), [Validators.required]),
+    inDate: new FormControl(new Date(2021, 4, 13, 2)),
     adult: new FormControl(1, [Validators.required]),
     child: new FormControl(0, [Validators.required]),
     infant: new FormControl(0, [Validators.required])
@@ -80,6 +92,17 @@ export class SearchboxComponent implements OnInit {
     this.searchService.airportsSubject.asObservable().subscribe(message => {
       this.departures = message;
       this.arrivals = message;
+    })
+    this.searchService.searchInsertionSubject.asObservable().subscribe(message => {
+      this.searchForm.get('oneWay').setValue(message.oneWay)
+      this.searchForm.get('departure').setValue(message.departure)
+      this.searchForm.get('arrival').setValue(message.arrival)
+      this.searchForm.get('outDate').setValue(message.outDate)
+      this.searchForm.get('inDate').setValue(message.inDate)
+      this.searchForm.get('adult').setValue(message.adult)
+      this.searchForm.get('child').setValue(message.child)
+      this.searchForm.get('infant').setValue(message.infant)
+      this.submitSearch();
     })
   }
 

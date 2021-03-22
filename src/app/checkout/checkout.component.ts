@@ -1,5 +1,5 @@
-import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
-import { MatHorizontalStepper, MatStepper } from '@angular/material/stepper';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatHorizontalStepper } from '@angular/material/stepper';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { BasketService, IServerBasket } from '../basket/basket.service';

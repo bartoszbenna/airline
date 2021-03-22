@@ -17,6 +17,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatStepperModule } from '@angular/material/stepper';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
     imports: [
@@ -37,7 +38,8 @@ import { MatStepperModule } from '@angular/material/stepper';
       MatDialogModule,
       MatCardModule,
       MatTabsModule,
-      MatStepperModule
+      MatStepperModule,
+      MatExpansionModule
     ],
     exports: [
       MatFormFieldModule,
@@ -57,7 +59,8 @@ import { MatStepperModule } from '@angular/material/stepper';
       MatDialogModule,
       MatCardModule,
       MatTabsModule,
-      MatStepperModule
+      MatStepperModule,
+      MatExpansionModule
     ],
     providers: [
       {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true, strict: true}},

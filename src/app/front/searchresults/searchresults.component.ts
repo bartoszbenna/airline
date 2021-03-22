@@ -57,7 +57,7 @@ export class SearchresultsComponent implements OnInit {
 
       for (let flight of this.searchResults.outbound) {
         for (let day of this.outboundFlights) {
-          if (moment(flight.depDate).isSame(day.date, 'days')) {
+          if (moment(flight.depDate).isSame(day.date, 'days') && moment(flight.depDate).isAfter(new Date())) {
             day.flights.push(flight);
           }
         }
@@ -146,15 +146,18 @@ export class SearchresultsComponent implements OnInit {
   }
 
   decreaseInDate() {
-    const inDate = new Date(this.searchForm.inDate);
+    let inDate = new Date(this.searchForm.inDate);
     if (moment(new Date(inDate).setDate(inDate.getDate()) - 1).isAfter(this.selectedOutbound.arrDate)) {
-      this.searchForm.inDate.setDate(inDate.getDate() - 1);
+      inDate.setDate(new Date(inDate).getDate() - 1);
+      this.searchForm.inDate = inDate;
       this.searchService.search(this.searchForm);
     }
   }
 
   increaseInDate() {
-    this.searchForm.inDate.setDate(new Date(this.searchForm.inDate).getDate() + 1);
+    let inDate = new Date(this.searchForm.inDate);
+    inDate.setDate(new Date(this.searchForm.inDate).getDate() + 1);
+    this.searchForm.inDate = inDate;
     this.searchService.search(this.searchForm);
   }
 

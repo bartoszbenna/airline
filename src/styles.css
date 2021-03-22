@@ -7,21 +7,3 @@ body {
     background-color: #98C1D9;
 }
 
-.container {
-    /* background-color: #E0FBFC; */
-    background-color: white;
-    width: 80vw;
-    min-height: 100%;
-    margin: auto;
-}
-
-.header {
-    height: 65px;
-}
-
-.header h1 {
-    padding-left: 1%;
-    padding-right: 1%;
-    line-height: 65px;
-}
-

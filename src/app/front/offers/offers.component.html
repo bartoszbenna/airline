@@ -1,22 +1,27 @@
-<mat-form-field>
-    <mat-label>Show hot offers from:</mat-label>
-    <mat-select [(ngModel)]="selectedAirport" (ngModelChange)="changeAirport()">
-        <mat-option *ngFor="let airport of airports" [value]="airport.code">{{airport.name}}</mat-option>
-    </mat-select>
-</mat-form-field>
-<div class="tilescontainer" *ngIf="offers != undefined && offers.length != 0">
-    <div class="tile" *ngFor="let offer of offers">
-        <img src='{{ "/assets/img/airports/" + offer.arrCode + ".jpg"}}' class="image">
-        <div class="tileOverlay">
-            <div class="overlayText">
-                <h1>{{searchService.getNameFromCode(offer.arrCode)}}</h1>
-                {{offer.depDate.toDateString()}}<br>
-                {{offer.price}} EUR<br>
-                <button mat-raised-button>Check offer!</button>
+<div class="outerTilesContainer">
+    <div class="spinner" *ngIf="showSpinner">
+        <mat-spinner></mat-spinner>
+    </div>
+    <mat-form-field>
+        <mat-label>Show hot offers from:</mat-label>
+        <mat-select [(ngModel)]="selectedAirport" (ngModelChange)="changeAirport()" [disabled]="showSpinner" [disableOptionCentering]="true">
+            <mat-option *ngFor="let airport of airports" [value]="airport.code">{{airport.name}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div class="tilescontainer" *ngIf="offers != undefined && offers.length != 0">
+        <div class="tile" *ngFor="let offer of offers">
+            <img src='{{ "/assets/img/airports/" + offer.arrCode + ".jpg"}}' class="image">
+            <div class="tileOverlay">
+                <div class="overlayText">
+                    <h1>{{searchService.getNameFromCode(offer.arrCode)}}</h1>
+                    {{moment(offer.depDate).toDate().toDateString()}}<br>
+                    {{offer.price}} EUR<br>
+                    <button mat-raised-button (click)="selectOffer(offer)">Check offer!</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div *ngIf="offers == undefined || offers.length == 0">
-    No offers found!
+    <div *ngIf="offers == undefined || offers.length == 0">
+        No offers found!
+    </div>
 </div>

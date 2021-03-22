@@ -1,6 +1,21 @@
+.container {
+    /* background-color: #E0FBFC; */
+    background-color: white;
+    width: 80vw;
+    min-height: 100%;
+    margin: auto;
+}
+
+@media(max-width: 800px) {
+    .container {
+        width: 100vw;
+    }
+}
+
 .header {
     display: flex;
     flex-direction: row;
+    height: 65px;
 }
 
 .header img {
@@ -9,6 +24,9 @@
 
 .header h1 {
     overflow: hidden;
+    padding-left: 1%;
+    padding-right: 1%;
+    line-height: 65px;
 }
 
 app-navbar {
