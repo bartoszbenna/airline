@@ -5,7 +5,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import {
+	MatMomentDateModule,
+	MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
 import { MatRadioModule } from '@angular/material/radio';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -20,54 +23,63 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
-    imports: [
-      MatFormFieldModule,
-      MatInputModule,
-      MatButtonModule,
-      FormsModule,
-      ReactiveFormsModule,
-      MatSelectModule,
-      MatDatepickerModule,
-      MatMomentDateModule,
-      MatRadioModule,
-      MatBadgeModule,
-      MatTableModule,
-      MatProgressSpinnerModule,
-      MatMenuModule,
-      MatIconModule,
-      MatDialogModule,
-      MatCardModule,
-      MatTabsModule,
-      MatStepperModule,
-      MatExpansionModule
-    ],
-    exports: [
-      MatFormFieldModule,
-      MatInputModule,
-      MatButtonModule,
-      FormsModule,
-      ReactiveFormsModule,
-      MatSelectModule,
-      MatDatepickerModule,
-      MatMomentDateModule,
-      MatRadioModule,
-      MatBadgeModule,
-      MatTableModule,
-      MatProgressSpinnerModule,
-      MatMenuModule,
-      MatIconModule,
-      MatDialogModule,
-      MatCardModule,
-      MatTabsModule,
-      MatStepperModule,
-      MatExpansionModule
-    ],
-    providers: [
-      {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true, strict: true}},
-      {provide: MAT_DATE_FORMATS, useValue: {
-        parse: { dateInput: 'DD/MM/YYYY' },
-        display: { dateInput: 'DD/MM/YYYY', monthYearLabel: 'MMM YYYY' }
-      }}
-    ]
-  })
-  export class MaterialModule { }
+	imports: [
+		MatFormFieldModule,
+		MatInputModule,
+		MatButtonModule,
+		FormsModule,
+		ReactiveFormsModule,
+		MatSelectModule,
+		MatDatepickerModule,
+		MatMomentDateModule,
+		MatRadioModule,
+		MatBadgeModule,
+		MatTableModule,
+		MatProgressSpinnerModule,
+		MatMenuModule,
+		MatIconModule,
+		MatDialogModule,
+		MatCardModule,
+		MatTabsModule,
+		MatStepperModule,
+		MatExpansionModule,
+	],
+	exports: [
+		MatFormFieldModule,
+		MatInputModule,
+		MatButtonModule,
+		FormsModule,
+		ReactiveFormsModule,
+		MatSelectModule,
+		MatDatepickerModule,
+		MatMomentDateModule,
+		MatRadioModule,
+		MatBadgeModule,
+		MatTableModule,
+		MatProgressSpinnerModule,
+		MatMenuModule,
+		MatIconModule,
+		MatDialogModule,
+		MatCardModule,
+		MatTabsModule,
+		MatStepperModule,
+		MatExpansionModule,
+	],
+	providers: [
+		{
+			provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+			useValue: { useUtc: true, strict: true },
+		},
+		{
+			provide: MAT_DATE_FORMATS,
+			useValue: {
+				parse: { dateInput: 'DD/MM/YYYY' },
+				display: {
+					dateInput: 'DD/MM/YYYY',
+					monthYearLabel: 'MMM YYYY',
+				},
+			},
+		},
+	],
+})
+export class MaterialModule {}

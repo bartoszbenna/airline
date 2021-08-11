@@ -1,0 +1,46 @@
+<div class="register">
+    <div class="spinner" *ngIf="showSpinner">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div class="registerHeader">
+        <div class="registerHeaderTop">
+            <button mat-icon-button (click)="closeDialog()" (focus)="false"><mat-icon>arrow_back</mat-icon></button>
+            <h1>Sign up</h1>
+        </div>
+        <p (click)="closeDialog()">Already have an account?</p>
+    </div>
+    <form [formGroup]="registerForm" (ngSubmit)="submitForm()">
+        <mat-form-field appearance="outline">
+            <mat-label>First name</mat-label>
+            <input matInput placeholder="Enter first name" formControlName="firstName">
+            <mat-error *ngIf="registerForm.get('firstName').hasError('required')">Please enter name</mat-error>
+            <mat-error *ngIf="registerForm.get('firstName').hasError('pattern')">Name can only contain letters</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Last name</mat-label>
+            <input matInput placeholder="Enter last name" formControlName="lastName">
+            <mat-error *ngIf="registerForm.get('lastName').hasError('required')">Please enter name</mat-error>
+            <mat-error *ngIf="registerForm.get('lastName').hasError('pattern')">Name can only contain letters</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>E-mail</mat-label>
+            <input matInput placeholder="Enter e-mail address" formControlName="email" type="email">
+            <mat-error *ngIf="registerForm.get('email').hasError('required')">Please enter e-mail</mat-error>
+            <mat-error *ngIf="registerForm.get('email').hasError('email')">Invalid e-mail address</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput placeholder="Enter password" formControlName="password" type="password" (input)="onPasswordChange()">
+            <mat-error *ngIf="registerForm.get('password').hasError('required')">Please enter password</mat-error>
+            <mat-error *ngIf="registerForm.get('password').hasError('minlength')">Password must be > 6 characters long</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Confirm password</mat-label>
+            <input matInput placeholder="Confirm password" formControlName="confirmPassword" type="password" (input)="onPasswordChange()">
+            <mat-error *ngIf="registerForm.get('confirmPassword').invalid">Passwords do not match</mat-error>
+        </mat-form-field>
+        <mat-error *ngIf="registrationError">An error has occurred!</mat-error>
+        <mat-error *ngIf="userExistsError">A user with this email address already exists.</mat-error>
+        <button mat-raised-button type="submit">Sign up</button>
+    </form>
+</div>

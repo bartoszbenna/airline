@@ -1,49 +1,77 @@
 <div class="container">
-    <div class="spinner" *ngIf="showSpinner">
-        <mat-spinner></mat-spinner>
-    </div>
-    <h1>Current reservations</h1>
-    <mat-accordion *ngIf="!showError">
-        <mat-expansion-panel *ngFor="let reservation of reservations">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <mat-icon>airplane_ticket</mat-icon>
-                    <span><strong>{{reservation.reservationNumber}}</strong></span>
-                    <span><em>{{reservation.flights[0].depCode}} - {{reservation.flights[0].arrCode}}</em></span>
-                    <span *ngIf="reservation.flights.length == 1">{{formatDate(reservation.flights[0].depDate)}}</span>
-                    <span *ngIf="reservation.flights.length == 2">{{formatDate(reservation.flights[0].depDate)}} - {{formatDate(reservation.flights[1].arrDate)}}</span>
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-panel-description>
-                <div class="passengers">
-                    <div class="passengerHeading">
-                        <span><mat-icon>people</mat-icon></span>
-                        <span><h3><strong>Passengers</strong></h3></span>
-                    </div>
-                    <span>
-                        {{getPassengerString(reservation)}}
-                    </span>
-                </div>
-                <div class="flights">
-                    <div class="flightsHeading">
-                        <span><mat-icon>flight</mat-icon></span>
-                        <span><h3><strong>Your reserved flights</strong></h3></span>
-                    </div>
-                    <div class="outFlight">
-                        <mat-icon>flight_takeoff</mat-icon>
-                        <span>Outbound flight: {{getFlightString(reservation.flights[0])}}</span>
-                    </div>
-                    <div class="inFlight" *ngIf="reservation.flights.length == 2">
-                        <mat-icon>flight_landing</mat-icon>
-                        <span>Inbound flight: {{getFlightString(reservation.flights[1])}}</span>
-                    </div>
-                </div>
-            </mat-panel-description>
-            <button mat-raised-button>View reservation details</button>
-        </mat-expansion-panel>
-    </mat-accordion>
-    <div class="error" *ngIf="showError">
-        <h1>An error has occurred.</h1>
-    </div>
+	<div class="spinner" *ngIf="showSpinner">
+		<mat-spinner></mat-spinner>
+	</div>
+	<h1>Current reservations</h1>
+	<mat-accordion *ngIf="!showError">
+		<mat-expansion-panel *ngFor="let reservation of reservations">
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					<mat-icon>airplane_ticket</mat-icon>
+					<span
+						><strong>{{
+							reservation.reservationNumber
+						}}</strong></span
+					>
+					<span
+						><em
+							>{{ reservation.flights[0].depCode }} -
+							{{ reservation.flights[0].arrCode }}</em
+						></span
+					>
+					<span *ngIf="reservation.flights.length === 1">{{
+						formatDate(reservation.flights[0].depDate)
+					}}</span>
+					<span *ngIf="reservation.flights.length === 2"
+						>{{ formatDate(reservation.flights[0].depDate) }} -
+						{{ formatDate(reservation.flights[1].arrDate) }}</span
+					>
+				</mat-panel-title>
+			</mat-expansion-panel-header>
+			<mat-panel-description>
+				<div class="passengers">
+					<div class="passengerHeading">
+						<span><mat-icon>people</mat-icon></span>
+						<span
+							><h3><strong>Passengers</strong></h3></span
+						>
+					</div>
+					<span>
+						{{ getPassengerString(reservation) }}
+					</span>
+				</div>
+				<div class="flights">
+					<div class="flightsHeading">
+						<span><mat-icon>flight</mat-icon></span>
+						<span
+							><h3>
+								<strong>Your reserved flights</strong>
+							</h3></span
+						>
+					</div>
+					<div class="outFlight">
+						<mat-icon>flight_takeoff</mat-icon>
+						<span
+							>Outbound flight:
+							{{ getFlightString(reservation.flights[0]) }}</span
+						>
+					</div>
+					<div
+						class="inFlight"
+						*ngIf="reservation.flights.length === 2"
+					>
+						<mat-icon>flight_landing</mat-icon>
+						<span
+							>Inbound flight:
+							{{ getFlightString(reservation.flights[1]) }}</span
+						>
+					</div>
+				</div>
+			</mat-panel-description>
+			<button mat-raised-button>View reservation details</button>
+		</mat-expansion-panel>
+	</mat-accordion>
+	<div class="error" *ngIf="showError">
+		<h1>An error has occurred.</h1>
+	</div>
 </div>
-

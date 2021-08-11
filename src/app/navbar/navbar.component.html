@@ -13,6 +13,10 @@
                 <mat-icon>account_circle</mat-icon>
             </button>
             <mat-menu #menu="matMenu" xPosition="before">
+                <button mat-menu-item (click)="router.navigate(['/admin'])" *ngIf="role === 'admin'">
+                    <mat-icon>admin_panel_settings</mat-icon>
+                    <span>Open admin panel</span>
+                </button>
                 <button mat-menu-item (click)="router.navigate(['/account/details'])">
                     <mat-icon>account_box</mat-icon>
                     <span>View account details</span>

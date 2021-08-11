@@ -2,6 +2,10 @@
     <div class="spinner" *ngIf="isWaitingForResult">
         <mat-spinner></mat-spinner>
     </div>
+    <div class="loginHeader">
+        <h1>Sign in</h1>
+        <p (click)="openRegisterWindow()">No account yet? Click here to sign up!</p>
+    </div>
     <form (ngSubmit)="submitForm()" [formGroup]="loginForm">
         <mat-form-field appearance="outline">
             <mat-label>E-mail address</mat-label>

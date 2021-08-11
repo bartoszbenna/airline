@@ -13,6 +13,7 @@ import { FrontModule } from './front/front.module';
 import { AccountModule } from './account/account.module';
 import { BasketModule } from './basket/basket.module';
 import { CheckoutModule } from './checkout/checkout.module';
+import { AdminModule } from './admin/admin.module';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { CheckoutModule } from './checkout/checkout.module';
     LoginModule,
     AccountModule,
     BasketModule,
-    CheckoutModule
+    CheckoutModule,
+    AdminModule
   ],
   providers: [CookieService],
   bootstrap: [AppComponent]

@@ -1,21 +1,21 @@
-.loginbox {
+.register {
     position: relative;
-    margin: auto;
-    padding: 5%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
-.loginHeader {
+.registerHeader {
     text-align: center;
 }
 
-.loginHeader p {
+.registerHeaderTop button {
+    position: absolute;
+    left: 0;
+}
+
+.registerHeader p {
     font-size: small;
 }
 
-.loginHeader p:hover {
+.registerHeader p:hover {
     text-decoration: underline;
     cursor: pointer;
 }
